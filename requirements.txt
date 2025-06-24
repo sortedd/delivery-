@@ -1,0 +1,4 @@
+Flask==2.3.3
+reportlab==4.0.4
+Pillow==10.0.1
+python-barcode==0.15.1

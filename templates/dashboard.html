@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f9fafb;
+            color: #111827;
+        }
+        
+        .container {
+            padding: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease-in-out;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: #111827;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1f2937;
+        }
+        
+        .btn-outline {
+            background-color: white;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+        
+        .btn-outline:hover {
+            background-color: #f9fafb;
+        }
+        
+        .tabs {
+            width: 100%;
+        }
+        
+        .tabs-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background-color: #f1f5f9;
+            padding: 0.25rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+        }
+        
+        .tab-trigger {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #64748b;
+            transition: all 0.15s ease-in-out;
+        }
+        
+        .tab-trigger.active {
+            background-color: white;
+            color: #0f172a;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+        }
+        
+        .card-header {
+            padding: 1.5rem 1.5rem 0;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        .form-section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #111827;
+        }
+        
+        .form-grid {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .btn-full {
+            width: 100%;
+        }
+        
+        .alert {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+        
+        .alert-success {
+            background-color: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        
+        .alert-error {
+            background-color: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+        
+        .label-preview {
+            background-color: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        
+        .label-header {
+            margin-bottom: 1.5rem;
+        }
+        
+        .label-header h2 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tracking-number {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+        
+        .timestamp {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .address-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+        
+        .address-section h3 {
+            font-weight: 600;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .address-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .address-text {
+            font-size: 0.875rem;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+        
+        .barcode-container {
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        
+        .barcode-canvas {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.25rem;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #6b7280;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .empty-state p {
+            font-size: 0.875rem;
+        }
+        
+        @media (max-width: 768px) {
+            .address-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .tabs-list {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Delivery Dashboard</h1>
+            <a href="/logout" class="btn btn-outline">Logout</a>
+        </div>
+        
+        <div class="tabs">
+            <div class="tabs-list">
+                <button class="tab-trigger active" data-tab="order-form">Order Form</button>
+                <button class="tab-trigger" data-tab="label-output">Label Output</button>
+            </div>
+            
+            <!-- Order Form Tab -->
+            <div id="order-form" class="tab-content active">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Create Delivery Order</h2>
+                    </div>
+                    <div class="card-content">
+                        <form id="orderForm">
+                            <div class="form-section">
+                                <h3 class="section-title">Sender Information</h3>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="sender_name">Sender Name</label>
+                                        <input type="text" id="sender_name" name="sender_name" placeholder="Enter sender name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sender_address">Sender Address</label>
+                                        <textarea id="sender_address" name="sender_address" placeholder="Enter sender address" rows="3" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h3 class="section-title">Receiver Information</h3>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="receiver_name">Receiver Name</label>
+                                        <input type="text" id="receiver_name" name="receiver_name" placeholder="Enter receiver name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="receiver_address">Receiver Address</label>
+                                        <textarea id="receiver_address" name="receiver_address" placeholder="Enter receiver address" rows="3" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-full">Confirm Order</button>
+                        </form>
+                        
+                        <div id="orderMessage"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Label Output Tab -->
+            <div id="label-output" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Delivery Label</h2>
+                    </div>
+                    <div class="card-content">
+                        <div id="labelContent">
+                            <div class="empty-state">
+                                <h3>No order confirmed yet</h3>
+                                <p>Please complete the order form first</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include JsBarcode for barcode generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.5/JsBarcode.all.min.js"></script>
+    
+    <script>
+        let currentOrder = null;
+        
+        // Tab functionality
+        document.querySelectorAll('.tab-trigger').forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                const tabName = trigger.getAttribute('data-tab');
+                showTab(tabName);
+                
+                // Update active trigger
+                document.querySelectorAll('.tab-trigger').forEach(t => t.classList.remove('active'));
+                trigger.classList.add('active');
+            });
+        });
+        
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+        }
+        
+        // Order form submission
+        document.getElementById('orderForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                sender_name: document.getElementById('sender_name').value,
+                sender_address: document.getElementById('sender_address').value,
+                receiver_name: document.getElementById('receiver_name').value,
+                receiver_address: document.getElementById('receiver_address').value
+            };
+            
+            try {
+                const response = await fetch('/submit_order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentOrder = data;
+                    
+                    // Show success message
+                    document.getElementById('orderMessage').innerHTML = 
+                        `<div class="alert alert-success">
+                            <strong>Order Confirmed!</strong><br>
+                            Tracking Number: ${data.delivery_id}
+                        </div>`;
+                    
+                    // Clear form
+                    document.getElementById('orderForm').reset();
+                    
+                    // Update label preview
+                    updateLabelPreview(data);
+                    
+                    // Auto-switch to label tab after 2 seconds
+                    setTimeout(() => {
+                        showTab('label-output');
+                        document.querySelectorAll('.tab-trigger').forEach(t => t.classList.remove('active'));
+                        document.querySelector('[data-tab="label-output"]').classList.add('active');
+                    }, 2000);
+                    
+                } else {
+                    document.getElementById('orderMessage').innerHTML = 
+                        '<div class="alert alert-error">Failed to create order. Please try again.</div>';
+                }
+            } catch (error) {
+                document.getElementById('orderMessage').innerHTML = 
+                    '<div class="alert alert-error">Error creating order. Please check your connection.</div>';
+            }
+        });
+        
+        function updateLabelPreview(orderData) {
+            const labelContent = document.getElementById('labelContent');
+            const timestamp = new Date(orderData.order_data.timestamp);
+            
+            labelContent.innerHTML = `
+                <div class="label-preview">
+                    <div class="label-header">
+                        <h2>DELIVERY LABEL</h2>
+                        <div class="tracking-number">Tracking: ${orderData.delivery_id}</div>
+                        <div class="timestamp">Created: ${timestamp.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })}</div>
+                    </div>
+                    
+                    <div class="address-grid">
+                        <div class="address-section">
+                            <h3>FROM:</h3>
+                            <div class="address-name">${orderData.order_data.sender_name}</div>
+                            <div class="address-text">${orderData.order_data.sender_address}</div>
+                        </div>
+                        
+                        <div class="address-section">
+                            <h3>TO:</h3>
+                            <div class="address-name">${orderData.order_data.receiver_name}</div>
+                            <div class="address-text">${orderData.order_data.receiver_address}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="barcode-container">
+                        <canvas id="barcodeCanvas" class="barcode-canvas"></canvas>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button onclick="downloadPDF('${orderData.delivery_id}')" class="btn btn-primary">
+                            Download PDF
+                        </button>
+                        <button onclick="window.print()" class="btn btn-outline">
+                            Print Label
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Generate barcode
+            generateBarcode(orderData.delivery_id);
+        }
+        
+        function generateBarcode(trackingNumber) {
+            try {
+                const canvas = document.getElementById('barcodeCanvas');
+                if (canvas && window.JsBarcode) {
+                    JsBarcode(canvas, trackingNumber, {
+                        format: "CODE128",
+                        width: 2,
+                        height: 50,
+                        displayValue: true,
+                        fontSize: 16,
+                        textMargin: 8,
+                        fontOptions: "bold"
+                    });
+                }
+            } catch (error) {
+                console.error('Barcode generation error:', error);
+            }
+        }
+        
+        function downloadPDF(deliveryId) {
+            window.open(`/generate_label/${deliveryId}`, '_blank');
+        }
+        
+        // Auto-focus first input on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('sender_name').focus();
+        });
+    </script>
+</body>
+</html>
